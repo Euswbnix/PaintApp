@@ -1,6 +1,7 @@
 package com.paintapp.paint.shapes;
 
 import com.paintapp.paint.app.FillStyle;
+import com.paintapp.paint.persistence.SaveVisitor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -203,5 +204,31 @@ public class Polyline implements Drawable {
      */
     @Override
     public void setFillStyle(FillStyle fillStyle) {
+    }
+
+    /**
+     * @return the polyline's color
+     */
+    public Color getColor() {
+        return this.color;
+    }
+
+    /**
+     * @return the polyline's line width
+     */
+    public double getLineWidth() {
+        return this.lineWidth;
+    }
+
+    /**
+     * @return an unmodifiable view of the polyline's points
+     */
+    public List<Point> getPoints() {
+        return Collections.unmodifiableList(points);
+    }
+
+    @Override
+    public void accept(SaveVisitor v) {
+        v.visit(this);
     }
 }

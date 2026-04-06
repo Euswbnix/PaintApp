@@ -1,5 +1,7 @@
 package com.paintapp.paint.app;
 
+import com.paintapp.paint.persistence.PaintFileParser;
+import com.paintapp.paint.persistence.PaintFileSaver;
 import com.paintapp.paint.shapes.ImageS;
 import com.paintapp.paint.strategy.DrawingStrategy;
 import javafx.application.Platform;
@@ -280,6 +282,9 @@ public class View implements EventHandler<ActionEvent> {
         String command = ((MenuItem) event.getSource()).getText();
         switch (command) {
             case "Exit" -> Platform.exit();
+            case "New" -> handleNew();
+            case "Open" -> handleOpen();
+            case "Save" -> handleSave();
             case "Undo" -> {
                 paintModel.undo();
                 System.out.println("Undid");
@@ -307,6 +312,64 @@ public class View implements EventHandler<ActionEvent> {
             case "Import Image" -> handleImportImage();
             default -> {
             }
+        }
+    }
+
+    /**
+     * Wipes the current canvas and starts a new empty document.
+     */
+    private void handleNew() {
+        paintModel.clearAll();
+        System.out.println("New canvas");
+    }
+
+    /**
+     * Prompts the user for a Paint Save File and loads its shapes
+     * into the current model.
+     */
+    private void handleOpen() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open Paint File");
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Paint Save Files", "*.txt", "*.paint"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File file = fc.showOpenDialog(stage);
+        if (file == null) {
+            System.out.println("Open cancelled");
+            return;
+        }
+        PaintFileParser parser = new PaintFileParser();
+        if (parser.parse(file.getAbsolutePath())) {
+            paintModel.replaceWith(parser.getPaintModel());
+            System.out.println("Opened " + file.getName());
+        } else {
+            showErrorLog("Failed to open file",
+                    file.getName() + "\n" + parser.getErrorMessage());
+        }
+    }
+
+    /**
+     * Prompts the user for a destination and writes the current model
+     * out in the Paint Save File format.
+     */
+    private void handleSave() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save Paint File");
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Paint Save Files", "*.txt", "*.paint"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File file = fc.showSaveDialog(stage);
+        if (file == null) {
+            System.out.println("Save cancelled");
+            return;
+        }
+        if (PaintFileSaver.save(paintModel, file)) {
+            System.out.println("Saved to " + file.getAbsolutePath());
+        } else {
+            showErrorLog("Failed to save file",
+                    "Could not write to " + file.getAbsolutePath());
         }
     }
 }

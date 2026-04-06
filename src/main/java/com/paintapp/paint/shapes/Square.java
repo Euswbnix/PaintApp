@@ -1,6 +1,7 @@
 package com.paintapp.paint.shapes;
 
 import com.paintapp.paint.app.FillStyle;
+import com.paintapp.paint.persistence.SaveVisitor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -225,5 +226,10 @@ public class Square implements Drawable {
     @Override
     public void setFillStyle(FillStyle style) {
         this.fillStyle = style;
+    }
+
+    @Override
+    public void accept(SaveVisitor v) {
+        v.visit(this);
     }
 }

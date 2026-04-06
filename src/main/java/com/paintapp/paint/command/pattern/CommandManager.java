@@ -70,4 +70,14 @@ public class CommandManager {
     public boolean canRedo() {
         return !redoStack.isEmpty();
     }
+
+    /**
+     * Wipes both the undo and redo stacks. Used when the user starts a
+     * brand-new document so that previous edits cannot be undone into the
+     * fresh canvas.
+     */
+    public void clear() {
+        undoStack.clear();
+        redoStack.clear();
+    }
 }

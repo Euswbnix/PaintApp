@@ -1,9 +1,12 @@
 package com.paintapp.paint.shapes;
 
 import com.paintapp.paint.app.FillStyle;
+import com.paintapp.paint.persistence.SaveVisitor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Representation of the Squiggle Object with getting and setting the characteristics of the squiggle
@@ -191,5 +194,17 @@ public class Squiggle implements Drawable {
      */
     @Override
     public void setFillStyle(FillStyle fillStyle) {
+    }
+
+    /**
+     * @return an unmodifiable view of the squiggle's points
+     */
+    public List<Point> getPoints() {
+        return Collections.unmodifiableList(points);
+    }
+
+    @Override
+    public void accept(SaveVisitor v) {
+        v.visit(this);
     }
 }

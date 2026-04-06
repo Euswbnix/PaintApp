@@ -1,6 +1,7 @@
 package com.paintapp.paint.shapes;
 
 import com.paintapp.paint.app.FillStyle;
+import com.paintapp.paint.persistence.SaveVisitor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -60,4 +61,15 @@ public interface Drawable {
      * @param style
      */
     void setFillStyle(FillStyle style);
+
+    /**
+     * Accepts a SaveVisitor so the shape can be serialized without
+     * the shape itself knowing anything about the save format.
+     * Implements the Visitor pattern.
+     * @param v the visitor that will serialize this shape
+     */
+    default void accept(SaveVisitor v) {
+        // Default no-op so transient/anonymous Drawables (e.g. selection
+        // box previews) don't need to implement serialization.
+    }
 }

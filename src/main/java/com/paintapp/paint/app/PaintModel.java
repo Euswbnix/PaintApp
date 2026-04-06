@@ -316,4 +316,33 @@ public class PaintModel extends Observable {
         setChanged();
         notifyObservers();
     }
+
+    /**
+     * Replaces the contents of this model with the drawables from {@code other},
+     * clears the undo/redo history and selection, and notifies observers.
+     * Used by the "Open" menu action when loading a saved file into the
+     * existing window.
+     */
+    public void replaceWith(PaintModel other) {
+        this.drawables.clear();
+        this.drawables.addAll(other.getDrawables());
+        this.selectedShapes.clear();
+        this.currentDrawable = null;
+        this.commandManager.clear();
+        setChanged();
+        notifyObservers();
+    }
+
+    /**
+     * Wipes the model: removes all drawables, clears selection, and clears the
+     * undo/redo history. Used by the "New" menu action.
+     */
+    public void clearAll() {
+        this.drawables.clear();
+        this.selectedShapes.clear();
+        this.currentDrawable = null;
+        this.commandManager.clear();
+        setChanged();
+        notifyObservers();
+    }
 }

@@ -20,6 +20,11 @@ A desktop drawing application built with **Java 22** and **JavaFX 22**. PaintApp
   - Unlimited Undo and Redo, powered by the Command pattern
 - **Image import**
   - Load PNG / JPG / JPEG / BMP / GIF files onto the canvas as a movable image shape
+- **Save / Open / New**
+  - Save the current canvas to a human-readable text file (`*.txt` / `*.paint`)
+  - Open a previously saved file and continue editing
+  - Start a fresh canvas at any time via **File → New**
+  - File format is the `Paint Save File Version 1.0` text format and supports all eight shape types
 
 ## Architecture
 
@@ -33,6 +38,7 @@ PaintApp follows a classic **Model–View–Controller** layout and showcases se
 | **Factory pattern** | `ShapeFactory` | Centralized creation of `Drawable` instances |
 | **Strategy pattern** | `com.paintapp.paint.strategy` | Each drawing tool (`CircleStrategy`, `SquiggleStrategy`, `SelectionStrategy`, …) implements `DrawingStrategy`, swapped at runtime when the user picks a tool |
 | **Command pattern** | `com.paintapp.paint.command.pattern` | `Command` interface plus `AddCommand`, `Move`, `Copy`, `Cut`, `Paste`, `Delete`, all managed by `CommandManager` to provide undo / redo |
+| **Visitor pattern** | `com.paintapp.paint.persistence` | `SaveVisitor` / `SaveToFileVisitor` serialize each shape to text without the shapes knowing the file format; `PaintFileSaver` and `PaintFileParser` handle file I/O |
 
 The entry point is `com.paintapp.paint.Paint`, which constructs a `PaintModel` and hands it to a `View`.
 
@@ -51,7 +57,8 @@ PaintApp/
     │       │   ├── app/                  Model + View + Controller
     │       │   ├── shapes/               Drawable shapes + ShapeFactory
     │       │   ├── strategy/             Drawing strategies (per tool)
-    │       │   └── command/pattern/      Undo/redo + clipboard commands
+    │       │   ├── command/pattern/      Undo/redo + clipboard commands
+    │       │   └── persistence/          Save / load (Visitor + parser)
     │       └── scribble/                 Standalone scribble demo panel
     └── resources/
         └── icons/                        Toolbar icons (PNG)
@@ -96,6 +103,17 @@ The generated app image will be under `target/app/`.
 3. Click and drag on the canvas to draw. For Polyline, click multiple times and double-click to finish.
 4. Use the **Edit** menu for Cut / Copy / Paste / Delete and Undo / Redo.
 5. Use **File → Import Image** to drop an image onto the canvas; it can then be moved like any other shape.
+6. Use **File → Save** to write your work to a `.txt` / `.paint` file, **File → Open** to load one back, and **File → New** to clear the canvas.
+
+## Tests
+
+Unit tests live under `src/test/java`. Run them with:
+
+```bash
+./mvnw test
+```
+
+The current test suite covers the `PaintFileParser` against a collection of well-formed and intentionally malformed sample files in `src/test/resources/samplefiles/`.
 
 ## License
 

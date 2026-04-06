@@ -11,6 +11,7 @@ module com.paintapp {
     exports com.paintapp.paint.strategy;
     exports com.paintapp.paint.command.pattern;
     exports com.paintapp.paint.app;
+    exports com.paintapp.paint.persistence;
 
 
 }

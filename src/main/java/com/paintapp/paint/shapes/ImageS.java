@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import com.paintapp.paint.app.FillStyle;
+import com.paintapp.paint.persistence.SaveVisitor;
 
 /**
  * Representation of for the image.
@@ -163,5 +164,10 @@ public class ImageS implements Drawable{
      */
     public double getHeight() {
         return height;
+    }
+
+    @Override
+    public void accept(SaveVisitor v) {
+        v.visit(this);
     }
 }

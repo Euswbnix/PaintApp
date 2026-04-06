@@ -1,6 +1,7 @@
 package com.paintapp.paint.shapes;
 
 import com.paintapp.paint.app.FillStyle;
+import com.paintapp.paint.persistence.SaveVisitor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -88,6 +89,14 @@ public class Circle implements Drawable {
     }
 
     /**
+     * Gives the circle's radius attribute
+     * @return the circle's radius
+     */
+    public double getRadius() {
+        return this.radius;
+    }
+
+    /**
      * Draws the circle object while considering the fill style of the circle.
      * @param g2d GraphicsContext input.
      */
@@ -171,5 +180,10 @@ public class Circle implements Drawable {
     @Override
     public void setFillStyle(FillStyle style) {
         this.fillStyle = style;
+    }
+
+    @Override
+    public void accept(SaveVisitor v) {
+        v.visit(this);
     }
 }
