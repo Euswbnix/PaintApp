@@ -5,7 +5,6 @@ module com.paintapp {
     requires java.desktop;
 
 
-    opens com.paintapp to javafx.fxml;
     exports com.paintapp.scribble;
     exports com.paintapp.paint;
     exports com.paintapp.paint.shapes;
